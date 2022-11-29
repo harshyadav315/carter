@@ -82,7 +82,7 @@
                         </p>
                       </a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                       <a href="<?php echo base_url ?>admin/?page=user/list" class="nav-link nav-user_list">
                         <i class="nav-icon fas fa-users-cog"></i>
                         <p>
@@ -97,7 +97,7 @@
                           Settings
                         </p>
                       </a>
-                    </li>
+                    </li> -->
                     <?php endif; ?>
                   </ul>
                 </nav>

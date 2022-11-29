@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2022 at 11:44 AM
+-- Generation Time: Nov 29, 2022 at 08:14 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -57,7 +57,11 @@ CREATE TABLE `category_list` (
 
 INSERT INTO `category_list` (`id`, `vendor_id`, `name`, `description`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
 (10, 4, 'Fruits', 'Fruits', 1, 0, '2022-11-15 15:48:01', NULL),
-(11, 4, 'Vegetables', 'Vegetables', 1, 0, '2022-11-15 15:48:18', NULL);
+(11, 4, 'Vegetables', 'Vegetables', 1, 0, '2022-11-15 15:48:18', NULL),
+(12, 5, 'Cakes', 'Soft and Sweet hand baken cakes', 1, 0, '2022-11-29 11:19:46', NULL),
+(13, 5, 'Bread', 'Fluffy Fluffy breads', 1, 0, '2022-11-29 11:20:37', NULL),
+(14, 6, 'Cool Drinks', 'Cool ', 1, 0, '2022-11-29 11:29:20', NULL),
+(15, 6, 'Packaged Water', 'Water bottles Drinkable and Poratble', 1, 0, '2022-11-29 11:30:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -88,7 +92,39 @@ CREATE TABLE `client_list` (
 --
 
 INSERT INTO `client_list` (`id`, `code`, `firstname`, `middlename`, `lastname`, `gender`, `contact`, `address`, `email`, `password`, `avatar`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(3, '202211-00001', 'Mahesh', '', 'Bishnoi', 'Male', '9699999999', 'Ganga Hostel, MNIT Jaipur', 'mahesh@test.com', '1a1dc91c907325c69271ddf0c944bc72', NULL, 1, 0, '2022-11-15 16:10:35', NULL);
+(3, '202211-00001', 'Mahesh', '', 'Bishnoi', 'Male', '9699999999', 'Ganga Hostel, MNIT Jaipur', 'mahesh@test.com', '1a1dc91c907325c69271ddf0c944bc72', NULL, 1, 0, '2022-11-15 16:10:35', NULL),
+(4, '202211-00002', 'Vishnu', '', 'Mali', 'Male', '9699999999', 'Aurobindo Hostel, MNIT Jaipur', 'vishnu@test.com', '1a1dc91c907325c69271ddf0c944bc72', NULL, 1, 0, '2022-11-15 16:27:08', NULL),
+(5, '202211-00003', 'Rohit', '', '.', 'Male', '9699999999', 'Ganga Hostel, Jaipur 302017', 'rohit@test.com', '1a1dc91c907325c69271ddf0c944bc72', 'uploads/clients/5.png?v=1668510304', 1, 0, '2022-11-15 16:35:03', '2022-11-15 16:35:04'),
+(6, '202211-00004', 'anvesh', '', 'p', 'Male', '8341347323', 'ganga hostel', '2020ucp1815@mnit.ac.in', '81dc9bdb52d04dc20036dbd8313ed055', 'uploads/clients/6.png?v=1669700734', 1, 0, '2022-11-29 11:15:34', '2022-11-29 11:15:34');
+
+--
+-- Triggers `client_list`
+--
+DELIMITER $$
+CREATE TRIGGER `newclient` AFTER INSERT ON `client_list` FOR EACH ROW INSERT INTO logs
+ SET action = CONCAT('New Client id=', NEW.id),
+     date = NOW()
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `logs`
+--
+
+CREATE TABLE `logs` (
+  `action` varchar(200) NOT NULL,
+  `date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `logs`
+--
+
+INSERT INTO `logs` (`action`, `date`) VALUES
+('1', '2022-11-29 12:05:54'),
+('New Order 13', '2022-11-29 12:08:28');
 
 -- --------------------------------------------------------
 
@@ -110,7 +146,18 @@ CREATE TABLE `order_items` (
 
 INSERT INTO `order_items` (`order_id`, `product_id`, `quantity`, `price`, `date_created`) VALUES
 (5, 13, 1, 95, '2022-11-15 16:11:14'),
-(6, 11, 1, 45, '2022-11-15 16:11:28');
+(6, 11, 1, 45, '2022-11-15 16:11:28'),
+(7, 13, 1, 95, '2022-11-29 11:03:45'),
+(7, 12, 1, 30, '2022-11-29 11:03:45'),
+(8, 12, 1, 30, '2022-11-29 11:25:01'),
+(9, 14, 1, 25, '2022-11-29 11:25:01'),
+(9, 15, 1, 50, '2022-11-29 11:25:01'),
+(10, 17, 1, 20, '2022-11-29 11:36:27'),
+(10, 18, 1, 40, '2022-11-29 11:36:27'),
+(10, 16, 1, 40, '2022-11-29 11:36:27'),
+(11, 15, 1, 50, '2022-11-29 11:36:27'),
+(12, 14, 1, 25, '2022-11-29 12:05:54'),
+(13, 19, 1, 119, '2022-11-29 12:08:28');
 
 -- --------------------------------------------------------
 
@@ -136,7 +183,24 @@ CREATE TABLE `order_list` (
 
 INSERT INTO `order_list` (`id`, `code`, `client_id`, `vendor_id`, `total_amount`, `delivery_address`, `status`, `date_created`, `date_updated`) VALUES
 (5, '202211-00001', 3, 4, 95, 'Ganga Hostel, MNIT Jaipur', 1, '2022-11-15 16:11:14', '2022-11-15 16:12:35'),
-(6, '202211-00002', 3, 4, 45, 'Ganga Hostel, MNIT Jaipur', 2, '2022-11-15 16:11:28', '2022-11-15 16:12:22');
+(6, '202211-00002', 3, 4, 45, 'Ganga Hostel, MNIT Jaipur', 2, '2022-11-15 16:11:28', '2022-11-15 16:12:22'),
+(7, '202211-00003', 5, 4, 125, 'Ganga Hostel, Jaipur 302017', 3, '2022-11-29 11:03:45', '2022-11-29 11:06:13'),
+(8, '202211-00004', 6, 4, 30, 'ganga hostel,MNIT Jaipur', 3, '2022-11-29 11:25:01', '2022-11-29 11:40:33'),
+(9, '202211-00005', 6, 5, 75, 'ganga hostel,MNIT Jaipur', 5, '2022-11-29 11:25:01', '2022-11-29 11:38:42'),
+(10, '202211-00006', 6, 6, 100, 'Aurobindo Hostel , MNIT Jaipur ', 4, '2022-11-29 11:36:27', '2022-11-29 11:37:41'),
+(11, '202211-00007', 6, 5, 50, 'Aurobindo Hostel , MNIT Jaipur ', 4, '2022-11-29 11:36:27', '2022-11-29 11:38:25'),
+(12, '202211-00008', 6, 5, 25, 'ganga hostel', 0, '2022-11-29 12:05:54', '2022-11-29 12:05:54'),
+(13, '202211-00009', 6, 6, 119, 'ganga hostel', 0, '2022-11-29 12:08:28', '2022-11-29 12:08:28');
+
+--
+-- Triggers `order_list`
+--
+DELIMITER $$
+CREATE TRIGGER `neworder` AFTER INSERT ON `order_list` FOR EACH ROW INSERT INTO logs
+ SET action = CONCAT('New Order ', NEW.id),
+     date = NOW()
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -167,7 +231,13 @@ INSERT INTO `product_list` (`id`, `vendor_id`, `category_id`, `name`, `descripti
 (10, 4, 11, 'Potato', '&lt;p&gt;Fresh Potato&lt;/p&gt;', 30, 'uploads\\products\\potato.jpg', 1, 0, '2022-11-15 15:50:54', '2022-11-15 16:06:14'),
 (11, 4, 11, 'Onion', '&lt;p&gt;Fresh onion&lt;/p&gt;', 45, 'uploads\\products\\onion.jpg', 1, 0, '2022-11-15 15:51:42', '2022-11-15 16:07:06'),
 (12, 4, 10, 'Banana', '&lt;p&gt;Banana&lt;/p&gt;', 30, 'uploads\\products\\banana.jpg', 1, 0, '2022-11-15 15:57:10', '2022-11-15 16:03:03'),
-(13, 4, 10, 'Apple', 'Apples', 95, 'uploads\\products\\apple.jpg', 1, 0, '2022-11-15 16:00:47', '2022-11-15 16:08:00');
+(13, 4, 10, 'Apple', 'Apples', 95, 'uploads\\products\\apple.jpg', 1, 0, '2022-11-15 16:00:47', '2022-11-15 16:08:00'),
+(14, 5, 12, 'Cup Cakes', '&lt;p&gt;Sweety&lt;/p&gt;', 25, 'uploads/products/14.png?v=1669701145', 1, 0, '2022-11-29 11:22:25', '2022-11-29 11:22:25'),
+(15, 5, 13, 'Wheat Bread', '&lt;p&gt;Brown&amp;nbsp;&lt;/p&gt;', 50, 'uploads/products/15.png?v=1669701241', 1, 0, '2022-11-29 11:24:01', '2022-11-29 11:24:01'),
+(16, 6, 14, 'Sprite', '&lt;p&gt;Sprite&lt;/p&gt;', 40, 'uploads/products/16.png?v=1669701637', 1, 0, '2022-11-29 11:30:37', '2022-11-29 11:30:37'),
+(17, 6, 15, 'Bisleri', 'pure and Cure', 20, 'uploads/products/17.png?v=1669701693', 1, 0, '2022-11-29 11:31:33', '2022-11-29 11:31:33'),
+(18, 6, 14, 'Fanta', '&lt;p&gt;fanTastic&lt;/p&gt;', 40, 'uploads/products/18.png?v=1669701759', 1, 0, '2022-11-29 11:32:38', '2022-11-29 11:32:39'),
+(19, 6, 14, 'CranBerry', '&lt;p&gt;Non Alcoholic Fruit Juice&amp;nbsp;&lt;/p&gt;', 119, 'uploads/products/19.png?v=1669701869', 1, 0, '2022-11-29 11:34:29', '2022-11-29 11:34:29');
 
 -- --------------------------------------------------------
 
@@ -192,7 +262,8 @@ INSERT INTO `shop_type_list` (`id`, `name`, `status`, `delete_flag`, `date_creat
 (6, 'Fruits & Vegetables', 1, 0, '2022-11-15 15:41:26', NULL),
 (7, 'Dairy, Bread And Eggs', 1, 0, '2022-11-15 15:42:00', NULL),
 (8, 'Snacks', 1, 0, '2022-11-15 15:42:24', NULL),
-(9, 'Bakery', 1, 0, '2022-11-15 15:42:32', NULL);
+(9, 'Bakery', 1, 0, '2022-11-15 15:42:32', NULL),
+(10, 'Drinks', 1, 0, '2022-11-29 11:26:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -203,19 +274,21 @@ INSERT INTO `shop_type_list` (`id`, `name`, `status`, `delete_flag`, `date_creat
 CREATE TABLE `system_info` (
   `id` int(30) NOT NULL,
   `meta_field` text NOT NULL,
-  `meta_value` text NOT NULL
+  `meta_value` text NOT NULL,
+  `totalorders` int(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `system_info`
 --
 
-INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`) VALUES
-(1, 'name', 'Grocery Management System'),
-(6, 'short_name', 'CARTER'),
-(11, 'logo', 'uploads/logo.png'),
-(13, 'user_avatar', 'uploads/user_avatar.jpg'),
-(14, 'cover', 'uploads/cover-1644367404.png');
+INSERT INTO `system_info` (`id`, `meta_field`, `meta_value`, `totalorders`) VALUES
+(1, 'name', 'Grocery Management System', NULL),
+(6, 'short_name', 'CARTER', NULL),
+(11, 'logo', 'uploads/logo.png', NULL),
+(13, 'user_avatar', 'uploads/user_avatar.jpg', NULL),
+(14, 'cover', 'uploads/cover-1644367404.png', NULL),
+(100, 'totalvalue', '0', NULL);
 
 -- --------------------------------------------------------
 
@@ -270,7 +343,19 @@ CREATE TABLE `vendor_list` (
 --
 
 INSERT INTO `vendor_list` (`id`, `code`, `shop_type_id`, `shop_name`, `shop_owner`, `contact`, `username`, `password`, `avatar`, `status`, `delete_flag`, `date_created`, `date_updated`) VALUES
-(4, '202211-00001', 6, 'Fresh Fruits', 'Bharat', '9699999999', 'bharat', '1a1dc91c907325c69271ddf0c944bc72', NULL, 1, 0, '2022-11-15 15:44:33', NULL);
+(4, '202211-00001', 6, 'Fresh Fruits', 'Bharat', '9699999999', 'bharat', '1a1dc91c907325c69271ddf0c944bc72', NULL, 1, 0, '2022-11-15 15:44:33', NULL),
+(5, '202211-00002', 9, 'Mukku Bakers', 'Mukesh  B', '9493119891', 'Mukesh', '1a1dc91c907325c69271ddf0c944bc72', 'uploads/vendors/5.png?v=1669700905', 1, 0, '2022-11-29 11:18:25', '2022-11-29 11:18:25'),
+(6, '202211-00003', 10, 'Beverages', 'Yaswanth kishor', '8500074854', 'yash', '1a1dc91c907325c69271ddf0c944bc72', 'uploads/vendors/6.png?v=1669701491', 1, 0, '2022-11-29 11:28:11', '2022-11-29 11:28:11');
+
+--
+-- Triggers `vendor_list`
+--
+DELIMITER $$
+CREATE TRIGGER `newvendor` AFTER INSERT ON `vendor_list` FOR EACH ROW INSERT INTO logs
+ SET action = CONCAT('New Vendor id=', NEW.id, ' Shop Name = ',NEW.shop_name),
+     date = NOW()
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -353,43 +438,43 @@ ALTER TABLE `vendor_list`
 -- AUTO_INCREMENT for table `cart_list`
 --
 ALTER TABLE `cart_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `category_list`
 --
 ALTER TABLE `category_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `client_list`
 --
 ALTER TABLE `client_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `order_list`
 --
 ALTER TABLE `order_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `product_list`
 --
 ALTER TABLE `product_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `shop_type_list`
 --
 ALTER TABLE `shop_type_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `system_info`
 --
 ALTER TABLE `system_info`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -401,7 +486,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vendor_list`
 --
 ALTER TABLE `vendor_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
